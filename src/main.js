@@ -69,7 +69,7 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                 messageLineHeight: "20px",
                 backgroundColor: "rgb(255,153,102)",
                 position: "topRight", 
-                iconUrl,
+                iconUrl: iconUrl,
                 imageWidth: 30,
                  });
                  // добавити скруглення для iziToast
