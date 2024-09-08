@@ -10,7 +10,7 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 import { gettingData } from './js/pixabay-api.js';
 import { renderData } from './js/render-functions.js';
 //ВСТАВКА ШЛЯХУ ДЛЯ ІЗІТОСТ ЩОБ РОБИЛА
-import iconUrl from 'url(data:/js/favicon.svg)'
+import iconUrl from 'url(data:/js/favicon.svg;base64,)'
     // "/js/favicon.svg"
 
 
