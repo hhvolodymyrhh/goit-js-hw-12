@@ -71,12 +71,14 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                 position: "topRight", 
                 iconUrl: iconUrl,
                 imageWidth: 30,
+                timeout: 500000,
                  });
                  // добавити скруглення для iziToast
             const iziToastElStyle = document.querySelector(".iziToast");
             iziToastElStyle.style.borderRadius = '10px';
                 iziToastElStyle.style.overflow = 'hidden';
                 //добавить стилі на іконку в ізітост
+                //======================= ЦІ СТИЛІ ПОТРАПЛЯЮТЬ В КЕТЧ====================
                  const iziToastImgStyle = document.querySelector(".iziToast-cover");
             iziToastImgStyle.style.backgroundColor = 'transparent';
                 iziToastImgStyle.style.left = "10px";
@@ -104,7 +106,8 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                 messageSize: "18px",
                 messageLineHeight: "20px",
                 backgroundColor: "rgb(37, 150, 190)",
-                position: "topRight", 
+                     position: "topRight", 
+                timeout: 5000000,
                  });
                  // добавити стилі для iziToast
                    const iziToastElStyle = document.querySelector(".iziToast");
@@ -172,11 +175,13 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                 messageSize: "18px",
                 messageLineHeight: "20px",
                 backgroundColor: "rgb(255,153,102)",
-                position: "topRight",              
+                     position: "topRight",
+                
                  });
                  // добавити скруглення для iziToast
                     const iziToastElStyle = document.querySelector(".iziToast");
                     iziToastElStyle.style.borderRadius = '10px';
+        
                     const iziToastEl = document.querySelector(".iziToast-wrapper");
                     iziToastEl.style.position = 'fixed';
                     iziToastElStyle.style.overflow = 'hidden';
