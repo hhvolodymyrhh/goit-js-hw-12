@@ -71,15 +71,13 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                 position: "topRight", 
                 iconUrl: iconUrl,
                 imageWidth: 30,
-                timeout: 500000,
                  });
                  // добавити скруглення для iziToast
             const iziToastElStyle = document.querySelector(".iziToast");
             iziToastElStyle.style.borderRadius = '10px';
                 iziToastElStyle.style.overflow = 'hidden';
                 //добавить стилі на іконку в ізітост
-                //======================= ЦІ СТИЛІ ПОТРАПЛЯЮТЬ В КЕТЧ====================
-                 const iziToastImgStyle = document.querySelector(".iziToast-cover");
+                 const iziToastImgStyle = document.querySelector(".iziToast-wrapper");
             iziToastImgStyle.style.backgroundColor = 'transparent';
                 iziToastImgStyle.style.left = "10px";
                  
