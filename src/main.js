@@ -59,7 +59,7 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
     const comingsImg = await gettingData(InputSearch, pageGrowthJs)
     try {              
         if (comingsImg.hits.length === 0) {
-               btnMorePosts.style.display = 'none';
+            btnMorePosts.style.display = 'none';
                 //попередження .......IZITOST.......
                 //alert("Sorry, there are no images matching your search query. Please try again!");
                  iziToast.show({
@@ -81,7 +81,7 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
             iziToastImgStyle.style.backgroundColor = 'transparent';
                 iziToastImgStyle.style.left = "10px";
                  
-            } else {
+        } else {
                //очистка попереднього вмісту карток та створення нових ".galleryEl" для сабміту
                if (eventCome?.type === "submit") {
                    userList.innerHTML = '';
@@ -91,12 +91,14 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                   loaderMore.style.display = 'block';
                    }
                 
-               renderData(comingsImg.hits, userList);
-            //    console.log(comingsImg)
-               //_______прибирання кнопки та повідомлення при кількості постів______
-               const li = userList.querySelectorAll('li');
+            renderData(comingsImg.hits, userList);
+            btnMorePosts.style.display = 'block';
+
+               
+            const li = userList.querySelectorAll('li');
+            //_______прибирання кнопки та повідомлення при кількості постів______
                if (comingsImg.totalHits <= li.length) {
-                   
+                   btnMorePosts.style.display = 'none';
                     //попередження .......IZITOST.......
                  iziToast.show({
                 message: "We're sorry, but you've reached the end of search results.",
@@ -115,7 +117,7 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                     iziToastEl.style.position = 'fixed';
         
 
-                   btnMorePosts.style.display = 'none';
+                //=========btnMorePosts.style.display = 'none';==========
                    // Сховати індикатор завантаження після завантаження всіх картинок
                         if (eventCome?.type === "submit") {
                         //0 завантажувач невидимий
@@ -158,11 +160,11 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                             } else {
                             loaderMore.style.display = 'none';
                             }
-                        } 
-                    });
-                }
-            });
-             }
+                            } 
+                        });
+                    }
+                });
+            }
         }
         catch (error) {
             //попередження .......IZITOST.......
@@ -190,7 +192,8 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
 gettingUserForm.addEventListener("submit", (event) => {
     event.preventDefault();
     userList.innerHTML = '';
-    btnMorePosts.style.display = 'none';
+    
+    //лічильник для наступних сторінок
     pageGrowthJs = 1;
     inputSearchListener = event.currentTarget.elements.search.value.toLowerCase().trim();
     
@@ -200,7 +203,7 @@ gettingUserForm.addEventListener("submit", (event) => {
     };
     addImage(inputSearchListener, pageGrowthJs, event); 
     pageGrowthJs++;
-    btnMorePosts.style.display = 'block';
+    
 });
 
 //слухач для кнопки додає лічильник сторінки по значенню з інпута шука наступну сторінку
@@ -212,7 +215,7 @@ btnMorePosts.addEventListener("click", async(event) => {
         return
     };
     await addImage(inputSearchListener, pageGrowthJs); 
-    // ==============================================================
+    
             //ПРОКРУТКА
     const elem = document.querySelector(".gallery-list-item");
     const rect = elem.getBoundingClientRect().height * 2;
