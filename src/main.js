@@ -59,7 +59,7 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
     const comingsImg = await gettingData(InputSearch, pageGrowthJs)
     try {              
         if (comingsImg.hits.length === 0) {
-            btnMorePosts.style.display = 'none';
+            
                 //попередження .......IZITOST.......
                 //alert("Sorry, there are no images matching your search query. Please try again!");
                  iziToast.show({
@@ -79,7 +79,9 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                 //добавить стилі на іконку в ізітост
                  const iziToastImgStyle = document.querySelector(".iziToast-wrapper");
             iziToastImgStyle.style.backgroundColor = 'transparent';
-                iziToastImgStyle.style.left = "10px";
+            iziToastImgStyle.style.left = "10px";
+            
+            btnMorePosts.style.display = 'none';
                  
         } else {
                //очистка попереднього вмісту карток та створення нових ".galleryEl" для сабміту
