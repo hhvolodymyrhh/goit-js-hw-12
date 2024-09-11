@@ -24,7 +24,12 @@ export async function gettingData(inputSearch, pageGrowth = 1) {
     page: `${pageGrowth}`,
     per_page: 15,
             }
-      });
-    
-    return response.data
+      })
+  .then(response => {
+		return response.data
+	})
+	.catch(error => {
+		return error
+  });
+  return response
 }

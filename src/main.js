@@ -57,9 +57,13 @@ let inputSearchListener;
 async function addImage(InputSearch, pageGrowthJs, eventCome) {
     
     const comingsImg = await gettingData(InputSearch, pageGrowthJs)
-    try {              
-        if (comingsImg.hits.length === 0) {
-            
+    try {
+        //перевірка на наявність ключа message
+        if ('message' in comingsImg) {
+            //перекидання в блок catch
+            throw comingsImg.message;
+        //якщо картинок нема
+        } else if (comingsImg.hits.length === 0) {
                 //попередження .......IZITOST.......
                 //alert("Sorry, there are no images matching your search query. Please try again!");
                  iziToast.show({
@@ -80,25 +84,25 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                  const iziToastImgStyle = document.querySelector(".iziToast-wrapper");
             iziToastImgStyle.style.backgroundColor = 'transparent';
             iziToastImgStyle.style.left = "10px";
-            
+
             btnMorePosts.style.display = 'none';
-                 
+        //при наявності картинок  
         } else {
-               //очистка попереднього вмісту карток та створення нових ".galleryEl" для сабміту
+               //видима анімація завантаження
                if (eventCome?.type === "submit") {
-                   userList.innerHTML = '';
-                   //0 завантажувач видимий
                     loader.style.display = 'block';
                } else {
                   loaderMore.style.display = 'block';
                    }
-                
+            //додавання розмітки та картинок
             renderData(comingsImg.hits, userList);
-            btnMorePosts.style.display = 'block';
+            //при сабміті додавання кнопки Load more
+            if (eventCome?.type === "submit") {
+               btnMorePosts.style.display = 'block';
+            };
 
-               
             const li = userList.querySelectorAll('li');
-            //_______прибирання кнопки та повідомлення при кількості постів______
+            //умова кількості постів менша чи дорівнює кількості li
                if (comingsImg.totalHits <= li.length) {
                    btnMorePosts.style.display = 'none';
                     //попередження .......IZITOST.......
@@ -116,59 +120,61 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                    iziToastElStyle.style.borderRadius = '10px';
                    iziToastElStyle.style.overflow = 'hidden';
                    const iziToastEl = document.querySelector(".iziToast-wrapper");
-                    iziToastEl.style.position = 'fixed';
-        
+                   iziToastEl.style.position = 'fixed';
 
-                //=========btnMorePosts.style.display = 'none';==========
-                   // Сховати індикатор завантаження після завантаження всіх картинок
-                        if (eventCome?.type === "submit") {
-                        //0 завантажувач невидимий
-                        loader.style.display = 'none';
-                        } else {
-                        loaderMore.style.display = 'none';
-                        }
+                   // Сховати індикатор завантаження
+                    if (eventCome?.type === "submit") {
+                    loader.style.display = 'none';
+                    loaderMore.style.display = 'none';
+                    } else {
+                    loaderMore.style.display = 'none';
+                    }
                return
                }
                  
-                   //метод для оновлення бібліотеки для асинхрону
+            //метод для оновлення бібліотеки для асинхрону
                gallery.refresh() 
                
-                 //0 Перевірте завантаження всіх зображень
+            //0 Перевірте завантаження всіх зображень
            const images = userList.querySelectorAll('img');
             let loadedImagesCount = 0;
 
             images.forEach(img => {
-                if (img.complete) {
-                    // 
-                    // console.log(img.complete)
-                    loadedImagesCount++;
-                    if (loadedImagesCount === images.length) {
-                        // Сховати індикатор завантаження після завантаження всіх картинок
-                        if (eventCome?.type === "submit") {
-                        //0 завантажувач невидимий
-                        loader.style.display = 'none';
-                        } else {
-                        loaderMore.style.display = 'none';
-                        }
-                    } 
-                } else {
                     img.addEventListener('load', () => {
                         loadedImagesCount++;
+                        // ====================================================
+                        console.log("load");
                         if (loadedImagesCount === images.length) {
-                            // Сховати індикатор завантаження після завантаження всіх картинок
+                                    // Сховати індикатор завантаження
                             if (eventCome?.type === "submit") {
-                        
                             loader.style.display = 'none';
+                            loaderMore.style.display = 'none';
                             } else {
                             loaderMore.style.display = 'none';
                             }
-                            } 
+                            
+                        } else {
+                            // ====================================================
+                             console.log("load none");
+                            // Сховати індикатор завантаження
+                            if (eventCome?.type === "submit") {
+                            loader.style.display = 'none';
+                            loaderMore.style.display = 'none';
+                            } else {
+                            loaderMore.style.display = 'none';
+                            }
+                            
+                        throw new Error("завантаження неповне!");
+                        }
+                       
                         });
-                    }
                 });
             }
         }
-        catch (error) {
+    catch (error) {
+    loader.style.display = 'none';
+    loaderMore.style.display = 'none';
+    btnMorePosts.style.display = 'none';
             //попередження .......IZITOST.......
                 //alert(`Sorry, ${error}. Please try again!`);
                  iziToast.show({
@@ -187,7 +193,7 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                     const iziToastEl = document.querySelector(".iziToast-wrapper");
                     iziToastEl.style.position = 'fixed';
                     iziToastElStyle.style.overflow = 'hidden';
-    } 
+    };
 }
 
 //слухач для сабміту прибера дефолтні події лічильньник сторінки поверта до 1 по значенню з інпуту створює сторінку додає лічильник сторінки відобража кнопку додавання інших сторінок 
@@ -195,7 +201,7 @@ gettingUserForm.addEventListener("submit", (event) => {
     event.preventDefault();
     userList.innerHTML = '';
     
-    //лічильник для наступних сторінок
+    //обнулення лічильника для наступних сторінок 
     pageGrowthJs = 1;
     inputSearchListener = event.currentTarget.elements.search.value.toLowerCase().trim();
     
@@ -220,10 +226,14 @@ btnMorePosts.addEventListener("click", async(event) => {
     
             //ПРОКРУТКА
     const elem = document.querySelector(".gallery-list-item");
-    const rect = elem.getBoundingClientRect().height * 2;
+    //_____________________________________________
+    console.log(elem)
+    if (elem) {
+        const rect = elem.getBoundingClientRect().height * 2;
            
-    window.scrollBy({
-    top: rect,
-    behavior: "smooth",
-    });
+        window.scrollBy({
+            top: rect,
+            behavior: "smooth",
+        });
+    }
 });
