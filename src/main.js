@@ -9,10 +9,8 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 //імпорт з сусідніх файлів дж ес
 import { gettingData } from './js/pixabay-api.js';
 import { renderData } from './js/render-functions.js';
-//ВСТАВКА ШЛЯХУ ДЛЯ ІЗІТОСТ ЩОБ РОБИЛА
+//ВСТАВКА ШЛЯХУ ДЛЯ ІЗІТОСТ ЩОБ РОБИЛА SVG
 import iconUrl from './img/octagon.svg';
-
-
 
 // ключ що прриходить на https://pixabay.com
 
@@ -136,39 +134,34 @@ async function addImage(InputSearch, pageGrowthJs, eventCome) {
                gallery.refresh() 
                
             //0 Перевірте завантаження всіх зображень
-           const images = userList.querySelectorAll('img');
-            let loadedImagesCount = 0;
-
-            images.forEach(img => {
-                    img.addEventListener('load', () => {
-                        loadedImagesCount++;
-                        // ====================================================
-                        console.log("load");
-                        if (loadedImagesCount === images.length) {
-                                    // Сховати індикатор завантаження
-                            if (eventCome?.type === "submit") {
-                            loader.style.display = 'none';
-                            loaderMore.style.display = 'none';
-                            } else {
-                            loaderMore.style.display = 'none';
-                            }
-                            
-                        } else {
-                            // ====================================================
-                             console.log("load none");
-                            // Сховати індикатор завантаження
-                            if (eventCome?.type === "submit") {
-                            loader.style.display = 'none';
-                            loaderMore.style.display = 'none';
-                            } else {
-                            loaderMore.style.display = 'none';
-                            }
-                            
-                        throw new Error("завантаження неповне!");
-                        }
-                       
-                        });
+           // Функція для створення Promise для завантаження зображення
+            function loadImage(img) {
+                return new Promise((resolve, reject) => {
+                    img.onload = () => resolve(img);
+                    img.onerror = () => reject(new Error(`Failed to load image: ${img.src}`));
                 });
+            }
+
+            // Отримати всі зображення
+            const images = userList.querySelectorAll('img');
+
+            // Вибрати останні 15 зображень
+            const imagesToLoad = Array.from(images).slice(-15);
+
+            // Створити масив Promise для вибраних зображень
+            const imagePromises = imagesToLoad.map(loadImage);
+
+            // Очікувати, поки всі вибрані зображення не будуть завантажені
+            Promise.all(imagePromises)
+                .then(() => {
+                    // Сховати індикатор завантаження
+                    loader.style.display = 'none';
+                    loaderMore.style.display = 'none';
+                })
+                .catch((error) => {
+                    console.error('Error loading images:', error);
+                });
+            //0 end
             }
         }
     catch (error) {
@@ -211,7 +204,6 @@ gettingUserForm.addEventListener("submit", (event) => {
     };
     addImage(inputSearchListener, pageGrowthJs, event); 
     pageGrowthJs++;
-    
 });
 
 //слухач для кнопки додає лічильник сторінки по значенню з інпута шука наступну сторінку
@@ -226,8 +218,7 @@ btnMorePosts.addEventListener("click", async(event) => {
     
             //ПРОКРУТКА
     const elem = document.querySelector(".gallery-list-item");
-    //_____________________________________________
-    console.log(elem)
+    
     if (elem) {
         const rect = elem.getBoundingClientRect().height * 2;
            
